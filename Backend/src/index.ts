@@ -1,13 +1,15 @@
 import express from "express";
 import cors from 'cors';
+import dotenv from 'dotenv'
 
-// Ensure the paths to the router modules are correct
 import { contentRouter } from './routes/content';
 import { userRouter } from './routes/user';
 import { shareRouter } from './routes/share';
 
+dotenv.config()
+
 const app = express();
-app.use(express.json()); // Corrected line to parse JSON
+app.use(express.json());
 app.use(cors());
 
 app.use("/api/v1/user", userRouter);
