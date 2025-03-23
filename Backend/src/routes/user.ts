@@ -98,6 +98,52 @@ userRouter.post("/signup", async (req, res) => {
     }
 })
 
+//@ts-ignore
+userRouter.post('/verify', async (req, res) => {
+    // get token from url
+    // validate token
+    // find user based on token
+    // check if not 
+    // set isVerified field to true & save
+    // return response
+
+    //@ts-ignore
+    const { token } = req.params;
+    if (!token) {
+        return res.status(400).json({
+            message: "Invalid Token"
+        })
+    }
+
+    try {
+
+        const user = await userModel.findOne({ verificationToken: token})
+        if (!user) {
+            return res.status(400).json({
+                message: "Invalid Token"
+            })
+        }
+
+        user.isVerified = true;
+        user.verificationToken = null;
+        await user.save();
+
+        res.status(200).json({
+            message: "User verified successfully",
+            success: true
+        })
+
+
+    } catch (error) {
+        res.status(400).json({
+            message: "User is not verified",
+            error: error,
+            success: false
+        })
+    }
+
+})
+
 userRouter.post("/login", (req, res) => {
     res.json({
         message: "login endpoint"
