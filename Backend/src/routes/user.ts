@@ -174,7 +174,6 @@ userRouter.post("/login", async (req, res) => {
         const token = jwt.sign({
             id: user._id
         }, process.env.JWT_SECRET || "default-secret")
-        console.log(process.env.JWT_SECRET);
 
         res.cookie("Token", token, {httpOnly: true, secure: true})
 
