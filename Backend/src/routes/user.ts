@@ -4,6 +4,7 @@ import { userModel } from "../db/db";
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import nodemailer from 'nodemailer'
+import jwt from 'jsonwebtoken'
 
 const userRouter = Router();
 
@@ -99,7 +100,7 @@ userRouter.post("/signup", async (req, res) => {
 })
 
 //@ts-ignore
-userRouter.post('/verify', async (req, res) => {
+userRouter.get('/verify/:token', async (req, res) => {
     // get token from url
     // validate token
     // find user based on token
@@ -144,10 +145,52 @@ userRouter.post('/verify', async (req, res) => {
 
 })
 
-userRouter.post("/login", (req, res) => {
-    res.json({
-        message: "login endpoint"
-    })
+//@ts-ignore
+userRouter.post("/login", async (req, res) => {
+
+    const { email, password } = req.body;
+    if( !email || !password ) {
+        return res.status(400).json({
+            message: "Invalid email or password"
+        });
+    }
+
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                message: "Invalid email or password"
+            });
+        }
+
+        //@ts-ignore
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Invalid password"
+            })
+        }
+
+        const token = jwt.sign({
+            id: user._id
+        }, process.env.JWT_SECRET || "default-secret")
+        console.log(process.env.JWT_SECRET);
+
+        res.cookie("Token", token, {httpOnly: true, secure: true})
+
+        res.status(400).json({
+            message: "User logged in successfully",
+            success: true,
+            token: token
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            message: "User not loggedin",
+            success: false,
+            error: error
+        });
+    }
 })
 
 export { userRouter };
