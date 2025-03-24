@@ -5,19 +5,19 @@ const contentRouter = Router();
 
 contentRouter.post("/", userMiddleware, async (req, res) => {
     res.json({
-        message: "content endpoint"
+        message: "Content creation endpoint"
     })
 })
 
 contentRouter.get("/", userMiddleware, async (req, res) => {
     res.json({
-        message: "content endpoint"
+        message: "Get Content endpoint"
     })
 })
 
 contentRouter.delete("/", userMiddleware, async (req, res) => {
     res.json({
-        message: "content endpoint"
+        message: "Delete content endpoint"
     })
 })
 
