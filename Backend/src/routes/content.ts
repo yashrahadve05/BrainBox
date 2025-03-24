@@ -9,16 +9,4 @@ contentRouter.post("/", userMiddleware, async (req, res) => {
     })
 })
 
-contentRouter.get("/", userMiddleware, async (req, res) => {
-    res.json({
-        message: "Get Content endpoint"
-    })
-})
-
-contentRouter.delete("/", userMiddleware, async (req, res) => {
-    res.json({
-        message: "Delete content endpoint"
-    })
-})
-
 export { contentRouter };
